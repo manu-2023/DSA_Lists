@@ -14,17 +14,17 @@ DNODE* endinsertion(DNODE *list,int info);
 DNODE* frontdelition(DNODE* list);
 DNODE* enddel(DNODE *list);
 DNODE* aftins(DNODE *list,int info,int pinfo);
-
+DNODE* infodel(DNODE* list,int pinfo);
 
 
 int main()
 {
     DNODE *list;
-    int x, ch, pos,pinfo;
+    int x,ch,pinfo;
     list=NULL;
     while (1)
     {
-        printf("\n Enter you choice \n 1 -> Front Insertion \n 2 -> Display \n 3 -> End insertion \n 4 -> Front Deletion \n 5 -> End Deletion \n 6 -> After Insertion \n 7 -> Position Deletion \n 8 -> Ordered Inseertion \n 9 -> Exit \n");
+        printf("\n Enter you choice \n 1 -> Front Insertion \n 2 -> Display \n 3 -> End insertion \n 4 -> Front Deletion \n 5 -> End Deletion \n 6 -> After Insertion \n 7 -> Information Deletion \n 8 -> Ordered Inseertion \n 9 -> Exit \n");
         scanf("%d", &ch);
         switch(ch)
         {
@@ -63,19 +63,19 @@ int main()
             {
                 printf("Enter the info: \n");
                 scanf("%d", &x);
-                printf("Enter the predecessor : \n");
+                printf("Enter the predecessor info : \n");
                 scanf("%d", &pinfo);
                 list=aftins(list,x,pinfo);
             }break;
-            /*
+      
             case 7:
             {
-                printf("Enter the position to delete: \n");
-                scanf("%d", &pos);
-                list=posdel(list,pos);
+                printf("Enter the information of the node to delete: \n");
+                scanf("%d", &pinfo);
+                list=infodel(list,pinfo);
 
             }break;
-
+            /*
             case 8:
             {
                 printf("Enter the information : \n");
@@ -220,11 +220,46 @@ DNODE* aftins(DNODE *list,int info,int pinfo){//inserts when the previous info i
         else{
             printf("Invalid predecessor  node  info");
         }
-       
-
-
-        
+          
     }
     return list;
 }
 
+
+DNODE* infodel(DNODE* list,int pinfo){
+    DNODE *temp=list;
+    if (list==NULL){
+        printf("Empty list");
+
+    }
+    else if(list->right==NULL && temp->info==pinfo){//first node with no further node
+        list=NULL;
+        last=NULL;
+        free(temp);
+    }
+    else if (temp->info==pinfo){//first node with further nodes
+            list=list->right;
+            list->left=NULL;
+            free(temp);
+        }
+    else{
+        while (temp->right!=NULL && temp->info!=pinfo){//Traversing
+            temp=temp->right;
+        }
+        if (temp->right==NULL && temp->info==pinfo){//Deleteing last node
+            temp->left->right=NULL;
+            last=temp->left;
+            free(temp);
+        }
+        else if (temp->info==pinfo){//middle deleting
+            (temp->left)->right=temp->right;
+            (temp->right)->left=temp->left;
+            last=temp->left;
+            free(temp);
+        }
+        else{
+            printf("Element not found");
+        }
+    }
+    return list;
+}
